@@ -22,8 +22,8 @@
             <div class="w-[40%] hidden md:block">
                 <nav class="flex gap-x-12">
                     <router-link to = "/" class="font-pop font-normal text-[16px] leading-6 text-black">Home</router-link>
+                    <router-link to = "/shop" class="font-pop font-normal text-[16px] leading-6 text-black">Shop</router-link>
                     <router-link to = "/" class="font-pop font-normal text-[16px] leading-6 text-black">Contact</router-link>
-                    <router-link to = "/" class="font-pop font-normal text-[16px] leading-6 text-black">About</router-link>
                     <router-link to = "/register" class="font-pop font-normal text-[16px] leading-6 text-black">Sign up</router-link>
                     
                     <div class="relative" @mouseenter="openDropdown" @mouseleave="closeDropdown">
@@ -35,7 +35,7 @@
                             <router-link to="/cart" class="block px-4 py-2 text-black">Cart</router-link>
                             <router-link to="/checkout" class="block px-4 py-2 text-black">Checkout</router-link>
                             <router-link to="/wishlist" class="block px-4 py-2 text-black">Wishlist</router-link>
-                            <router-link to="/user/profile" class="block px-4 py-2 text-black">Profile</router-link>
+                            <router-link to="/profile" class="block px-4 py-2 text-black">Profile</router-link>
                             <router-link to="/login" class="block px-4 py-2 text-black">Log in</router-link>
                             <router-link to="/error" class="block px-4 py-2 text-black">Error</router-link>
                         </div>
@@ -50,9 +50,9 @@
             </div>
             <div class="w-[20%] md:w-[15%]">
                 <div class="hidden md:flex gap-x-0 md:gap-x-2 md:pl-6">
-                    <i class="far fa-heart text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i>
-                    <i class="fas fa-shopping-cart text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i>
-                    <i class="far fa-user text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i>
+                    <router-link to="/cart"><i class="fas fa-shopping-cart text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i></router-link>
+                    <router-link to="/profile"><i class="far fa-user text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i></router-link>
+                    <a v-if="user" @click="logout" class="cursor-pointer" ><i class="fa-solid fa-right-from-bracket text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i></a>
                 </div>
                 <div class="block md:hidden text-end">
                     <i class="fas fa-bars fa-xl"></i>
@@ -64,7 +64,11 @@
 </template>
 <script setup>
     import Logo from '@/assets/images/logo.png'
+    import Profile from '@/pages/Profile.vue';
     import { computed, ref } from 'vue';
+    import useAuth from '@/composables/useAuth';
+    const {user, isAuthenticated, logout} = useAuth();
+
     
     const showDropdown = ref(false);
     let timeout = null;

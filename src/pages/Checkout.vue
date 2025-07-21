@@ -1,6 +1,7 @@
 <template>
     <section id="checkout">
         <div class="container pt-[70px] px-4 md:px-0 md:pt-[180px] py-[140px] flex flex-col md:flex-row gap-x-[173px]">
+            <!-- left section -->
             <div class="w-full md:w-1/2 billing">
                 <h1 class="font-inter font-medium text-[36px] leading-[30px] pb-12">Billing Details</h1>
                 <form action="">
@@ -36,30 +37,26 @@
                     </div>
                 </form>
             </div>
+            <!-- right section -->
             <div class="w-full md:w-1/2 cart-info pt-[60px] md:pt-[115px]">
                 <div class="flex flex-col gap-y-8">
-                    <div class="cart-product flex flex-row justify-between items-center pr-0 md:pr-[102px]">
+                    <div v-for="(item, index) in cart" :key="index" class="cart-product flex flex-row justify-between items-center pr-0 md:pr-[102px]">
                         <div class="product-info flex flex-row items-center gap-x-6">
-                            <img :src="product" alt="product-image" class="w-1/5">
-                            <h4 class="font-pop font-normal text-[16px] leading-6">LCD Monitor</h4>
+                            <img height="70" width="70" :src="item.image" alt="product-image">
+                            <h4 class="font-pop font-normal text-[16px] leading-6">{{item.name}}</h4>
+                        </div>
+                        <div class="quantity">
+                            <h4 class="font-pop font-normal text-[16px] leading-6">x{{ item.quantity }}</h4>
                         </div>
                         <div class="product-price">
-                            <h4 class="font-pop font-normal text-[16px] leading-6">$650</h4>
+                            <h4 class="font-pop font-normal text-[16px] leading-6">&#2547; {{ item.price * item.quantity }}</h4>
                         </div>
                     </div>
-                    <div class="cart-product flex flex-row justify-between items-center pr-0 md:pr-[102px]">
-                        <div class="product-info flex flex-row items-center gap-x-6">
-                            <img :src="product2" alt="product-image" class="w-1/5">
-                            <h4 class="font-pop font-normal text-[16px] leading-6">H1 Gamepad</h4>
-                        </div>
-                        <div class="product-price">
-                            <h4 class="font-pop font-normal text-[16px] leading-6">$1100</h4>
-                        </div>
-                    </div>
+                    
                     <div class="flex flex-col gap-y-8 pr-0 md:pr-[102px]">
                         <div class="cart-amount flex flex-row justify-between pb-4 border-b-1">
                             <h4 class="font-pop font-normal text-[16px] leading-6">Subtotal:</h4>
-                            <h4 class="font-pop font-normal text-[16px] leading-6">$1750</h4>
+                            <h4 class="font-pop font-normal text-[16px] leading-6">&#2547; {{ subtotal }}</h4>
                         </div>
                         <div class="cart-amount flex flex-row justify-between pb-4 border-b-1">
                             <h4 class="font-pop font-normal text-[16px] leading-6">Shipping:</h4>
@@ -67,7 +64,7 @@
                         </div>
                         <div class="cart-amount flex flex-row justify-between pb-4 border-b-1">
                             <h4 class="font-pop font-normal text-[16px] leading-6">Total:</h4>
-                            <h4 class="font-pop font-normal text-[16px] leading-6">$1750</h4>
+                            <h4 class="font-pop font-normal text-[16px] leading-6">&#2547; {{ subtotal }}</h4>
                         </div>
                     </div>
                     <form action="">
@@ -95,4 +92,25 @@
 <script setup>
     import product from '@/assets/images/product1.png'
     import product2 from '@/assets/images/product2.png'
+    import { ref, computed } from 'vue';
+    
+    const cart = ref([
+        {
+            id: 1,
+            name: 'product1',
+            image: 'https://placehold.co/70',
+            price: 720,
+            quantity: 1
+        },
+        {
+            id: 2,
+            name: 'product2',
+            image: 'https://placehold.co/70',
+            price: 600,
+            quantity: 2
+        },
+    ])
+    const subtotal = computed(()=>{
+        return cart.value.reduce((acc, cart)=>acc + cart.price * cart.quantity, 0)
+    })
 </script>

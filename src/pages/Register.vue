@@ -10,17 +10,20 @@
                         <h1 class="font-inter font-medium text-[18px] md:text-[36px] leading-7">Create an account</h1>
                         <h4 class="font-pop font-normal text-[14px] md:text-[16px] leading-6">Enter your details below</h4>
                     </div>
-                    <form action="">
+                    <form @submit.prevent="register">
                     <div class="flex flex-col gap-y-5 md:gap-y-10">
                         <div class="login-form flex flex-col gap-y-3 md:gap-y-10">
                             <div class="relative after:absolute after:content-[''] after:-bottom-[1px] after:left-0 after:w-[0px] focus-within:after:w-full after:h-[2px] after:bg-red-500 after:transition-all after:duration-500">
-                                <input type="text" placeholder="Name" class="pb-2 border-b-1 border-[rgba(0,0,0,0.5)] w-full text-[14px] md:text-[16px]">
+                                <input v-model="name" type="text" placeholder="Name" class="pb-2 border-b-1 border-[rgba(0,0,0,0.5)] w-full text-[14px] md:text-[16px]">
+                                <strong class="text-red-500" v-if="errors.name">{{ errors.name[0] }}</strong>
                             </div>
                             <div class="relative after:absolute after:content-[''] after:-bottom-[1px] after:left-0 after:w-[0px] focus-within:after:w-full after:h-[2px] after:bg-red-500 after:transition-all after:duration-500">
-                                <input type="text" placeholder="Email or Phone Number" class="pb-2 border-b-1 border-[rgba(0,0,0,0.5)] w-full text-[14px] md:text-[16px]">
+                                <input v-model="email" type="email" placeholder="Email" class="pb-2 border-b-1 border-[rgba(0,0,0,0.5)] w-full text-[14px] md:text-[16px]">
+                                <strong class="text-red-500" v-if="errors.email">{{ errors.email[0] }}</strong>
                             </div>
                             <div class="relative after:absolute after:content-[''] after:-bottom-[1px] after:left-0 after:w-[0px] focus-within:after:w-full after:h-[2px] after:bg-red-500 after:transition-all after:duration-500">
-                                <input type="password" placeholder="Password" class="pb-2 border-b-1 border-[rgba(0,0,0,0.5)] w-full text-[14px] md:text-[16px]">
+                                <input v-model="password" type="password" placeholder="Password" autocomplete="new-password" class="pb-2 border-b-1 border-[rgba(0,0,0,0.5)] w-full text-[14px] md:text-[16px]">
+                                <strong class="text-red-500" v-if="errors.password">{{ errors.password[0] }}</strong>
                             </div>
                         </div>
                         <div class="flex flex-col items-center justify-between gap-y-3">
@@ -34,10 +37,9 @@
                         </div>
                         <div class="flex flex-col md:flex-row gap-x-2 mx-auto">
                             <h4 class="font-pop font-regular text-[16px] leading-6 text-[rgba(0,0,0,0.7)]">Already have an account?</h4>
-                            <h4 class="font-pop font-regular text-[16px] leading-6 text-[rgba(0,0,0,0.7)] hover:underline hover:cursor-pointer">Log in</h4>
+                            <router-link to="/login"><h4 class="font-pop font-regular text-[16px] leading-6 text-[rgba(0,0,0,0.7)] hover:underline hover:cursor-pointer">Log in</h4></router-link>
                         </div>
                     </div>
-                    
                     </form>
                 </div>
             </div>
@@ -47,4 +49,51 @@
 <script setup>
     import Side from '@/assets/images/side.png'
     import Google from '@/assets/images/google.png'
+    import { ref, watch } from 'vue';
+    import axios from 'axios';
+    import Swal from 'sweetalert2'
+
+    const name = ref('')
+    const email = ref('')
+    const password = ref('')
+    const successmsg = ref('')
+    const errors = ref({})
+
+    const register = () => {
+        axios.post('http://127.0.0.1:8000/api/customer/register', {
+           name : name.value,
+           email : email.value,
+           password : password.value,
+        }).then(function(response){
+            successmsg.value = response.data.success
+            name.value = ''
+            email.value = ''
+            password.value = ''
+            showAlert()
+        }).catch(function(error){
+            errors.value = error.response.data.errors
+            
+        })
+    }
+
+    watch(name, ()=>{
+        if(errors.value.name) delete errors.value.name;
+    })
+    watch(email, ()=>{
+        if(errors.value.email) delete errors.value.email;
+    })
+    watch(password, ()=>{
+        if(errors.value.password) delete errors.value.password;
+    })
+
+    const showAlert = () =>{
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: successmsg.value,
+            showConfirmButton: false,
+            timer: 1500
+        });
+    }
+
 </script>
