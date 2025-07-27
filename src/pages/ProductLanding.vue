@@ -45,13 +45,13 @@
 <template>
 <section id="product-landing" class="font-pop">
     <div class="container py-[50px] md:py-[109px] px-5 md:px-0">
-        <div v-if="loading" class="animate-pulse space-y-4">
+        <!-- <div v-if="loading" class="animate-pulse space-y-4">
             <div class="h-6 bg-gray-200 rounded w-3/4"></div>
             <div class="h-4 bg-gray-200 rounded w-1/2"></div>
             <div class="h-6 bg-gray-300 rounded w-1/3"></div>
             <div class="h-20 bg-gray-100 rounded w-full"></div>
-        </div>
-        <div v-else>
+        </div> -->
+        <div>
             <div class="flex flex-row items-center gap-x-5 md:gap-x-[70px]">
                 <div class="w-1/3 md:w-1/2 flex flex-col-reverse gap-y-2 md:flex-row gap-x-[30px]">
                     <div class="w-1/4 flex flex-row flex-wrap md:flex-col gap-y-4 gap-x-1">
@@ -62,6 +62,7 @@
                     </div>
                 </div>
                 <div class="w-2/3 md:w-1/2">
+                <form @submit.prevent="cart_store">
                     <div class="flex flex-col gap-y-2 md:gap-y-4">
                         <h1 class="font-inter font-semibold text-[24px] leading-6">{{ product_details.name }}</h1>
                         <div class="flex flex-row gap-x-1 md:gap-x-2 items-center">
@@ -72,39 +73,44 @@
                                 <i class="fas fa-star text-[#FFAD33]"></i>
                                 <i class="fas fa-star text-[#FFAD33]"></i>
                             </div>
-                            <h4 class=" font-normal text-[14px] leading-[21px] opacity-[50%] hidden md:block">(150 Reviews)</h4>
                         </div>
-                        <h4 v-if="selectedInventory" class="font-inter font-normal text-[20px] md:text-[24px] leading-6">&#2547; ${{ selectedInventory && selectedInventory.discount_price ? + selectedInventory.discount_price : product_details.rel_to_inventories[0].discount_price }}</h4>
+                        <h4 v-if="selectedInventory?.after_discount" class="font-inter font-normal text-[20px] md:text-[24px] leading-6">
+                            <span>&#2547; {{ selectedInventory && selectedInventory.after_discount ? + selectedInventory.after_discount : product_details.rel_to_inventory[0].after_discount }}</span>
+                        </h4>
                         <hr class="">
                         <div class="flex flex-row gap-x-2 md:gap-x-6">
                             <h4 class="font-inter font-medium md:font-normal text-[16px] md:text-[20px] leading-[20px]">Colours:</h4>
                             <div v-if="product_details.rel_to_inventory" class="colors flex gap-x-2">
-                                <label v-for="color in uniqColors" :key="color.id">
-                                    <input type="radio" name="color" :style="{background:color.rel_to_color.code}">
+                                <label v-for="color in uniqueColors" :key="color.id">
+                                    <input v-if="color.rel_to_color.name!='NA'" type="radio" name="color" :value="Number(color.rel_to_color.id)" :style="{background:color.rel_to_color.code}" v-model="selectedColor">
+                                    <span v-else>NA</span>
                                 </label>
                             </div>
+                            <strong class="text-red-500" v-if="errors?.color_id">{{ errors.color_id[0] }}</strong>
                         </div>
                         <div class="flex flex-row gap-x-2 md:gap-x-6 items-center flex-wrap">
                             <div class="sizes flex flex-row gap-x-2 md:gap-x-6 items-center" ref="sizes">
                                 <h4 class="font-inter font-medium md:font-normal text-[16px] md:text-[20px] leading-[20px]">Sizes:</h4>
                                 <div v-if="product_details.rel_to_inventory" class="flex gap-x-2">
-                                    <label v-for="size in uniqSizes" :key="size" class="relative">
-                                        <input type="radio" name="size">
+                                    <label v-for="size in uniqueSizes" :key="size" class="relative">
+                                        <input type="radio" name="size" :value="Number(size.rel_to_size.id)" v-model="selectedSize">
                                         <h4 class="absolute top-[50%] left-[50%] -translate-[50%] text-[14px]  text-black font-medium">{{size.rel_to_size.name}}</h4>
                                     </label>
                                 </div>
+                                <strong class="text-red-500" v-if="errors?.size_id">{{ errors.size_id[0] }}</strong>
                             </div>
                         </div>
                         <div class="flex flex-col md:flex-row gap-y-2 md:gap-x-4 items-start md:items-center w-full">
                             <div class="quantity border border-[rgba(0,0,0,0.5)] rounded flex flex-row items-center w-2/5">
-                                <button class="focus:text-white focus:bg-[#DB4444] focus:border-transparent border-r-1 border-[rgba(0,0,0,0.5)]" @click="decrement"><i class="fas fa-minus px-3 py-[14px]"></i></button>
+                                <button type="button" class="focus:text-white focus:bg-[#DB4444] focus:border-transparent border-r-1 border-[rgba(0,0,0,0.5)]" @click="decrement"><i class="fas fa-minus px-3 py-[14px]"></i></button>
                                 <input type="text" class="font-medium text-[20px] leading-7 px-4 md:px-8 w-full text-center" :value=count>
-                                <button class="focus:text-white focus:bg-[#DB4444] focus:border-transparent border-l-1 border-[rgba(0,0,0,0.5)]" @click="increment"><i class="fas fa-plus px-3 py-[14px]"></i></button>
+                                <button type="button" class="focus:text-white focus:bg-[#DB4444] focus:border-transparent border-l-1 border-[rgba(0,0,0,0.5)]" @click="increment"><i class="fas fa-plus px-3 py-[14px]"></i></button>
                             </div>
-                            <button class="w-2/5 font-medium text-[16px] leading-6 text-white bg-[#DB4444] py-[10px] px-[48px] rounded hover:outline hover:outline-[#DB4444] hover:text-[#DB4444] hover:bg-white duration-300">Add Cart</button>
+                            <button type="submit" class="w-2/5 font-medium text-[16px] leading-6 text-white bg-[#DB4444] py-[10px] px-[48px] rounded hover:outline hover:outline-[#DB4444] hover:text-[#DB4444] hover:bg-white duration-300">Add Cart</button>
                             <button class="w-1/5 focus:text-white focus:bg-[#DB4444] focus:border-transparent border-1 rounded border-[rgba(0,0,0,0.5)] p-[9px]"><i class="far fa-heart fa-xl"></i></button>
                         </div>
                     </div>
+                </form>
                 </div>
             </div>
             <div class="product-details flex flex-col pb-[30px] pt-[18px] md:pb-[62px] md:pt-[45px]">
@@ -122,13 +128,21 @@
             </div>
             <h1 class="font-inter font-semibold text-[36px] leading-6">Related Products</h1>
             <div class="products flex flex-row flex-wrap gap-x-1 gap-y-4 md:gap-x-[30px] pt-5 md:pt-10 px-2 md:px-0">
-                <div v-for="(product, index) in products" :key="index" class="product w-[48%] md:w-[23%] space-y-4 hover:shadow-2xl p-2">
+                <div v-for="(product, index) in new_arrivals" :key="index" class="product w-[48%] md:w-[23%] space-y-4 hover:shadow-2xl p-2">
+                    <router-link :to="`/product/${product.id}`">
                     <div class="img-card p-10 bg-[#F5F5F5]">
-                        <img :src="product.images" alt="">
+                        <img :src="`${product_image_path}/${product.image}`" alt="">
                     </div>
                     <div class="product-cont space-y-1">
-                        <h1 class=" font-medium text-[16px] leading-6">{{product.title}}</h1>
-                        <div><span class=" font-medium text-[16px] leading-6 text-[#DB4444] pr-3">$120</span><del class=" font-medium text-[16px] leading-6 text-[#000]">$160</del></div>
+                        <h1 class=" font-medium text-[16px] leading-6">{{product.name}}</h1>
+                        <div v-if="product.first_inventory">
+                            <span class=" font-medium text-[16px] leading-6 text-[#DB4444] pr-3">&#2547; {{product.first_inventory.after_discount}}</span>
+                            <del v-if="product.discount" class=" font-medium text-[16px] leading-6 text-[#000]">&#2547; {{product.first_inventory.price}}</del>
+                        </div>
+                        <div v-else>
+                            <span class=" font-medium text-[16px] leading-6 text-[#DB4444] pr-3">Out of Stock</span>
+                        </div>
+
                         <div class="flex flex-row flex-wrap gap-x-2">
                             <div class="stars flex flex-row gap-x-1">
                                 <i class="fas fa-star text-[#FFAD33]"></i>
@@ -140,6 +154,7 @@
                             <h5 class=" font-normal text-[14px] leading-[21px] opacity-[50%]">(88)</h5>
                         </div>
                     </div>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -148,13 +163,11 @@
 </template>
 
 <script setup>
-    import product_img1 from '@/assets/images/product_img1.png'
-    import product_img2 from '@/assets/images/product_img2.png'
-    import product_img3 from '@/assets/images/product_img3.png'
-    import product_img4 from '@/assets/images/product_img4.png'
-    import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
+    import axios from 'axios'
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
     import { useRoute } from 'vue-router'
     import { useStore } from 'vuex'
+    import Swal from 'sweetalert2'
 
     // product image path to be retrieved from env
     const gallery_image_path = import.meta.env.VITE_GALLERY_IMAGE_PATH
@@ -162,23 +175,13 @@
 
     const route = useRoute()
     const store = useStore()
-
-    const product_details = computed(()=> store.getters.product_details)
+    
     const tags = computed(()=> store.getters.tags)
+    const product_details = computed(()=> store.getters.product_details)
+    const new_arrivals = computed(()=> store.getters.newArrivals)
+    const user = computed(()=> store.getters.user)
 
-    let isAlive = true
 
-    const products = ref([])
-
-    onMounted(async() => {
-        const response = await fetch('https://dummyjson.com/products?limit=4')
-        if(!isAlive) return
-        const data = await response.json()
-        products.value = data.products
-    })
-    onBeforeUnmount(()=>{
-        isAlive = false
-    })
 
     const count = ref(1)
     const increment = () =>{
@@ -190,27 +193,36 @@
         }
     }
 
+    const selectedColor = ref(null);
+    const selectedSize = ref(null);
 
-    // Fetching Product Details
-    onMounted(async()=>{
+    // Fetch Product
+
+    const selected_img = ref('')
+    onMounted(async() => {
         const productId = route.params.id
-        const savedProduct = JSON.parse(localStorage.getItem('product_details'))
+        await store.dispatch('fetchProductDetails', productId)
 
-        if(savedProduct && savedProduct.id == productId){
-            // if same product
-            store.commit('set_productDetails', savedProduct)
+        if(product_details.value.rel_to_inventory){
+            const defaultSize = product_details.value.rel_to_inventory.find(
+                (item)=>item.rel_to_size?.name == 'NA'
+            )
+            if(defaultSize){
+                selectedSize.value = defaultSize.rel_to_size.id
+            }
         }
-        else{
-            const response = await store.dispatch('fetchProductDetails', productId)
-            if(response){
-                localStorage.setItem('product_details', JSON.stringify(response))
+        if(product_details.value.rel_to_inventory){
+            const defaultColor = product_details.value.rel_to_inventory.find(
+                (item)=>item.rel_to_color?.name == 'NA'
+            )
+            if(defaultColor){
+                selectedColor.value = defaultColor.rel_to_color.id
             }
         }
     })
 
-    // Setting unique color and size
 
-    const uniqColors = computed(()=>{
+    const uniqueColors = computed(()=>{
         const seen = new Set()
         return product_details.value.rel_to_inventory.filter((item)=>{
             const id = item.rel_to_color.id
@@ -220,25 +232,30 @@
         })
     })
 
-    const uniqSizes = computed(()=>{
+    const defaultSizes = computed(()=>{
         const seen = new Set()
         return product_details.value.rel_to_inventory.filter((item)=>{
-            const id = item.rel_to_size.id
-            if (seen.has(id)) return false
-            seen.add(id)
+            const sizeId = item.rel_to_size.id
+            if(!sizeId || seen.has(sizeId)) return false
+            seen.add(sizeId)
             return true
         })
     })
 
-    // loading screen
-    const loading = ref(true)
-    const selected_img = ref('')
-    onMounted(async() => {
-        const productId = route.params.id
-        loading.value = true
-        await store.dispatch('fetchProductDetails', productId)
-        loading.value = false
+    const uniqueSizes = computed(()=>{
+        if(!selectedColor.value){
+            return defaultSizes.value
+        }
+        const seen = new Set()
+        return product_details.value.rel_to_inventory.filter(item=>{
+            if(item.color_id !== selectedColor.value) return false
+            const sizeId = item.rel_to_size?.id
+            if(seen.has(sizeId)) return false
+            seen.add(sizeId)
+            return true
+        })
     })
+    
 
     // product preview image change by gallery
     watch(product_details, (val)=>{
@@ -250,33 +267,87 @@
     }, {immediate: true})
 
     // setting price to set by selected inventory
-    const selectedSize = ref(null)
-    const selectedColor = ref(null)
-    const selectedInventory = computed(()=>{
-        const inventory = product_details.value.rel_to_inventory
-        if(!inventory){
-            return null
+
+    const selectedInventory = computed(() => {
+        const inventories = product_details.value.rel_to_inventory;
+
+        if (!inventories) return null;
+
+        const hasColors = inventories.some(inv => inv.color_id != null);
+        const hasSizes = inventories.some(inv => inv.size_id != null);
+
+        // Match both if available
+        if (hasColors && hasSizes && selectedColor.value && selectedSize.value) {
+            return inventories.find(inv =>
+                inv.color_id === selectedColor.value &&
+                inv.size_id === selectedSize.value
+            );
         }
-        const hasColor = inventory.some((inv) => inv.color_id != null)
-        const hasSize = inventory.some((inv) => inv.size_id != null)
-        if(hasColor && hasSize && selectedColor.value && selectedSize.value){
-            return inventory.find(inv =>{
-                inv.color_id === selectedColor
-                inv.size_id === selectedSize
-            })
+
+        // Match color only
+        if (hasColors && selectedColor.value) {
+            return inventories.find(inv => Number(inv.color_id) === Number(selectedColor.value));
         }
-        if(hasColor && selectedColor){
-            return inventory.find(inv =>{
-                inv.color_id === selectedColor
-            })
+
+        // Match size only
+        if (hasSizes && selectedSize.value) {
+            return inventories.find(inv => Number(inv.size_id) === Number(selectedSize.value));
         }
-        if(hasSize && selectedSize){
-            return inventory.find(inv =>{
-                inv.size_id === selectedColor
-            })
-        }
-        // if null
-        return inventories[0] || null
+
+        // Default fallback (no variants)
+        return inventories[0] || null;
     })
+
+    const customer_id = ref('')
+    const product_id = ref('')
+    const color_id = ref('')
+    const size_id = ref('')
+    const quantity = ref('')
+    const errors = ref({})
+
+    // Cart Store
+    const cart_store = computed(()=>{
+        axios.post(`http://127.0.0.1:8000/api/cart/store`, {
+            customer_id: user.value.id,
+            product_id: product_details.value.id,
+            color_id: selectedColor.value,
+            size_id: selectedSize.value,
+            quantity: count.value,
+        })
+        .then(response=>{
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: response.data.success,
+                showConfirmButton: false,
+                timer: 1500
+            });
+            store.dispatch('fetchCartDetails', user.value.id)
+        })
+        .catch(error=>{
+            errors.value = error.response.data.errors
+        })
+    })
+
+    watch(selectedColor, ()=>{
+        if (errors.value.color_id) {
+            delete errors.value.color_id
+        }
+    })
+    watch(selectedSize, ()=>{
+        if (errors.value.size_id) {
+            delete errors.value.size_id
+        }
+    })
+
+
+    // watch([selectedColor, selectedSize], ([color, size]) => {
+    //     console.log("Selected Color ID:", color);
+    //     console.log("Selected Size ID:", size);
+    // });
+
+    // watch(selectedInventory, (val) => {
+    //     console.log("Selected Inventory:", val)
+    // });
 
 </script>
