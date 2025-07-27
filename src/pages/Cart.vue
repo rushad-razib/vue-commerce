@@ -13,14 +13,14 @@
                         </tr>
                     </thead>
                     <tbody class="">
-                        <tr v-for="(item, index) in cart" :key="index" class="shadow-md outline-1 outline-gray-200">
-                            <td class="px-4 md:px-10 py-6 align-middle text-sm font-normal text-gray-700 whitespace-nowrap">
+                        <tr v-for="(item, index) in carts" :key="index" class="shadow-md outline-1 outline-gray-200">
+                            <td class="px-4 md:px-10 py-6 align-middle text-sm font-normal text-gray-700">
                                 <div class="flex items-center gap-x-5">
-                                    <img :src="item.image" alt="product-img" class="hidden md:block w-1/4">
-                                    <h1 class="pl-4 font-pop font-normal text-[16px] leading-6 text-black">{{ item.name }}</h1>
+                                    <img :src="`${product_img_path}/${item.rel_to_product.image}`" alt="product-img" class="hidden md:block w-1/4">
+                                    <h1 class="pl-4 font-pop font-normal text-[16px] leading-6 text-black">{{ item.rel_to_product.name }}</h1>
                                 </div>
                             </td>
-                            <td class="pl-10 w-1/6 font-pop font-normal text-[16px] leading-6 py-6 whitespace-nowrap">&#2547; {{ item.price }}</td>
+                            <td class="pl-10 w-1/6 font-pop font-normal text-[16px] leading-6 py-6 whitespace-nowrap">&#2547; {{ item.inventory.after_discount }}</td>
                             <td class="pl-10 w-1/6 py-6 font-pop font-normal text-[16px] leading-6 whitespace-nowrap">
                                 <div class="w-full md:w-1/2 flex items-center justify-evenly p-3 bg-gray-100 border border-[rgba(0,0,0,0.4)] rounded cursor-pointer select-none gap-x-2">
                                         
@@ -68,7 +68,18 @@
 </template>
 <script setup>
     import product from '@/assets/images/product1.png'
-    import { ref, computed } from 'vue'
+    import useAuth from '@/composables/useAuth'
+    import { ref, computed, watch } from 'vue'
+    import { useStore } from 'vuex'
+    const {user, isAuthenticated, logout} = useAuth()
+
+    const product_img_path = import.meta.env.VITE_PRODUCT_IMAGE_PATH
+
+    const store = useStore()
+    watch(user, (newUser)=>{
+        store.dispatch('fetchCartDetails', newUser.id)
+    })
+    const carts = computed(()=> store.getters.carts )
 
     const cart = ref([
         {
@@ -99,7 +110,6 @@
     const subtotal = computed(() =>{
         return cart.value.reduce((acc, cart)=>acc + cart.price * cart.count, 0)
     })
-
 
 
 

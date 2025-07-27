@@ -50,7 +50,10 @@
             </div>
             <div class="w-[20%] md:w-[15%]">
                 <div class="hidden md:flex gap-x-0 md:gap-x-2 md:pl-6">
-                    <router-link to="/cart"><i class="fas fa-shopping-cart text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i></router-link>
+                    <router-link to="/cart" class="relative">
+                    <i class="fas fa-shopping-cart text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i>
+                    <span class="absolute top-0 right-0 px-[4px] py-[3px] text-3 leading-3 bg-red-500 text-white rounded-full">{{cart_total}}</span>
+                    </router-link>
                     <router-link to="/profile"><i class="far fa-user text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i></router-link>
                     <a v-if="user" @click="logout" class="cursor-pointer" ><i class="fa-solid fa-right-from-bracket text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i></a>
                 </div>
@@ -65,11 +68,24 @@
 <script setup>
     import Logo from '@/assets/images/logo.png'
     import Profile from '@/pages/Profile.vue';
-    import { computed, ref } from 'vue';
+    import { computed, ref, watch } from 'vue';
     import useAuth from '@/composables/useAuth';
+    import { useStore } from 'vuex';
     const {user, isAuthenticated, logout} = useAuth();
 
+    const store = useStore();
     
+    
+    watch(user, (newUser)=>{
+        store.dispatch('fetchCartDetails', newUser.id)
+    })
+    const cart = computed(()=>store.getters.carts)
+
+    const cart_total = computed(()=>{
+        return cart.value.length
+    })
+
+
     const showDropdown = ref(false);
     let timeout = null;
 
