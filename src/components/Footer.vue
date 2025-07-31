@@ -10,26 +10,26 @@
                 <h3 class="font-pop font-medium text-[20px] leading-7 text-[#FAFAFA]">Support</h3>
                 <div class="flex flex-col gap-y-2 md:gap-y-4">
                     <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">111 Bijoy sarani, Dhaka,  DH 1515, Bangladesh.</a>
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">exclusive@gmail.com</a>
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">+88015-88888-9999</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">exclusive@gmail.com</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">+88015-88888-9999</a>
                 </div>
             </div>
             <div class="w-1/2 md:w-1/5 space-y-2 md:space-y-6 pl-4 md:pl-0">
                 <h3 class="font-pop font-medium text-[20px] leading-7 text-[#FAFAFA]">Account</h3>
                 <div class="flex flex-col gap-y-2 md:gap-y-4">
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">My Account</a>
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">Login / Register</a>
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">Cart</a>
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">Wishlist</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">My Account</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">Login / Register</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">Cart</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">Wishlist</a>
                 </div>
             </div>
             <div class="w-1/2 md:w-1/5 space-y-2 md:space-y-6">
                 <h3 class="font-pop font-medium text-[20px] leading-7 text-[#FAFAFA]">Quick Link</h3>
                 <div class="flex flex-col gap-y-2 md:gap-y-4">
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">Privacy Policy</a>
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">Terms Of Use</a>
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">FAQ</a>
-                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA]">Contact</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">Privacy Policy</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">Terms Of Use</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">FAQ</a>
+                    <a href="" class="font-pop font-normal text-[16px] leading-6 text-[#FAFAFA] hover:text-[#FE8D01]">Contact</a>
                 </div>
             </div>
             <div class="w-1/2 md:w-1/5 space-y-4 md:space-y-6 pl-4 md:pl-0">
@@ -37,15 +37,15 @@
                 <div class="flex gap-x-[11px] items-center">
                     <img :src=qr_code alt="">
                     <div class="flex flex-col gap-y-[10px]">
-                        <img :src=play_store alt="">
-                        <img :src=app_store alt="">
+                        <img :src=play_store alt="" class="cursor-pointer">
+                        <img :src=app_store alt="" class="cursor-pointer">
                     </div>
                 </div>
                 <div class="flex gap-x-4 md:gap-x-6">
-                    <i class="fab fa-facebook-f text-[#FAFAFA] font-thin"></i>
-                    <i class="fab fa-twitter text-[#FAFAFA]"></i>
-                    <i class="fab fa-instagram text-[#FAFAFA]"></i>
-                    <i class="fab fa-linkedin-in text-[#FAFAFA]"></i>
+                    <i class="fab fa-facebook-f text-[#FAFAFA] hover:text-[#FE8D01] cursor-pointer font-thin"></i>
+                    <i class="fab fa-twitter text-[#FAFAFA] hover:text-[#FE8D01] cursor-pointer"></i>
+                    <i class="fab fa-instagram text-[#FAFAFA] hover:text-[#FE8D01] cursor-pointer"></i>
+                    <i class="fab fa-linkedin-in text-[#FAFAFA] hover:text-[#FE8D01] cursor-pointer"></i>
                 </div>
             </div>
         </div>

@@ -14,9 +14,9 @@
     outline: 0;
     box-shadow: 0;
 }
-select:hover, a:hover{
+/* select:hover, a:hover{
     color: #FE8D01;
-}
+} */
 button:hover{
     cursor: pointer;
 }

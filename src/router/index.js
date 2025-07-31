@@ -11,6 +11,7 @@ import Login from '@/pages/Login.vue'
 import Register from '@/pages/Register.vue'
 import Shop from '@/pages/Shop.vue'
 import store from '@/store'
+import success from '@/pages/Success.vue'
 
 const routes = [
   { path: '/', component: Home },
@@ -23,6 +24,7 @@ const routes = [
   { path: '/login', component: Login },
   { path: '/register', component: Register },
   { path: '/shop', component: Shop },
+  { path: '/checkout/success', component: success },
 ]
 
 const router = createRouter({

@@ -21,23 +21,23 @@
             </div>
             <div class="w-[40%] hidden md:block">
                 <nav class="flex gap-x-12">
-                    <router-link to = "/" class="font-pop font-normal text-[16px] leading-6 text-black">Home</router-link>
-                    <router-link to = "/shop" class="font-pop font-normal text-[16px] leading-6 text-black">Shop</router-link>
-                    <router-link to = "/" class="font-pop font-normal text-[16px] leading-6 text-black">Contact</router-link>
-                    <router-link to = "/register" class="font-pop font-normal text-[16px] leading-6 text-black">Sign up</router-link>
+                    <router-link to = "/" class="font-pop font-normal text-[16px] leading-6 text-black hover:text-[#FE8D01]">Home</router-link>
+                    <router-link to = "/shop" class="font-pop font-normal text-[16px] leading-6 text-black hover:text-[#FE8D01]">Shop</router-link>
+                    <router-link to = "/" class="font-pop font-normal text-[16px] leading-6 text-black hover:text-[#FE8D01]">Contact</router-link>
+                    <router-link to = "/register" class="font-pop font-normal text-[16px] leading-6 text-black hover:text-[#FE8D01]">Sign up</router-link>
                     
                     <div class="relative" @mouseenter="openDropdown" @mouseleave="closeDropdown">
                         <button class="font-pop font-normal text-[16px] leading-6 text-black focus:outline-none flex items-center gap-x-1">Extras<span :class="{'rotate-180': showDropdown}" class="transition-transform duration-200">▼</span></button>
 
                         <!-- Dropdown Menu -->
                         <div v-if="showDropdown" class="absolute left-0 mt-2 w-40 bg-white shadow-lg rounded-md border border-gray-200" @mouseenter="cancelCloseDropdown" @mouseleave="closeDropdown">
-                            <router-link to="/product" class="block px-4 py-2 text-black">Product</router-link>
-                            <router-link to="/cart" class="block px-4 py-2 text-black">Cart</router-link>
-                            <router-link to="/checkout" class="block px-4 py-2 text-black">Checkout</router-link>
-                            <router-link to="/wishlist" class="block px-4 py-2 text-black">Wishlist</router-link>
-                            <router-link to="/profile" class="block px-4 py-2 text-black">Profile</router-link>
-                            <router-link to="/login" class="block px-4 py-2 text-black">Log in</router-link>
-                            <router-link to="/error" class="block px-4 py-2 text-black">Error</router-link>
+                            <router-link to="/product" class="block px-4 py-2 text-black hover:text-[#FE8D01]">Product</router-link>
+                            <router-link to="/cart" class="block px-4 py-2 text-black hover:text-[#FE8D01]">Cart</router-link>
+                            <router-link to="/checkout" class="block px-4 py-2 text-black hover:text-[#FE8D01]">Checkout</router-link>
+                            <router-link to="/wishlist" class="block px-4 py-2 text-black hover:text-[#FE8D01]">Wishlist</router-link>
+                            <router-link to="/profile" class="block px-4 py-2 text-black hover:text-[#FE8D01]">Profile</router-link>
+                            <router-link to="/login" class="block px-4 py-2 text-black hover:text-[#FE8D01]">Log in</router-link>
+                            <router-link to="/error" class="block px-4 py-2 text-black hover:text-[#FE8D01]">Error</router-link>
                         </div>
                     </div>
                 </nav>
