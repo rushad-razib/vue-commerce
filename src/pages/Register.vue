@@ -71,8 +71,9 @@
             password.value = ''
             showAlert()
         }).catch(function(error){
-            errors.value = error.response.data.errors
-            
+            if(error.response?.data?.errors){
+                errors.value = error.response.data.errors
+            }
         })
     }
 

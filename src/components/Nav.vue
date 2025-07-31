@@ -55,7 +55,7 @@
                     <span class="absolute top-0 right-0 px-[4px] py-[3px] text-3 leading-3 bg-red-500 text-white rounded-full">{{cart_total}}</span>
                     </router-link>
                     <router-link to="/profile"><i class="far fa-user text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i></router-link>
-                    <a v-if="user" @click="logout" class="cursor-pointer" ><i class="fa-solid fa-right-from-bracket text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i></a>
+                    <a v-if="isAuthenticated" @click="logout" class="cursor-pointer" ><i class="fa-solid fa-right-from-bracket text-black text-[24px] hover:bg-[#DB4444] hover:text-white p-1 md:p-[9px] rounded-full"></i></a>
                 </div>
                 <div class="block md:hidden text-end">
                     <i class="fas fa-bars fa-xl"></i>
@@ -74,7 +74,6 @@
     const {user, isAuthenticated, logout} = useAuth();
 
     const store = useStore();
-    
     
     watch(user, (newUser)=>{
         store.dispatch('fetchCartDetails', newUser.id)

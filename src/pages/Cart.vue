@@ -1,6 +1,7 @@
 <template>
     <section id="cart" class="py-[20px] md:py-[140px] px-5">
         <div class="container">
+            <form @submit.prevent="update">
             <div class="overflow-auto">
                 <table class="w-full border-separate border-spacing-y-10">
                     <thead class="">
@@ -24,14 +25,14 @@
                             <td class="pl-10 w-1/6 py-6 font-pop font-normal text-[16px] leading-6 whitespace-nowrap">
                                 <div class="w-full md:w-1/2 flex items-center justify-evenly p-3 bg-gray-100 border border-[rgba(0,0,0,0.4)] rounded cursor-pointer select-none gap-x-2">
                                         
-                                        <span class="text-end quantity font-pop font-normal text-[16px] leading-6">{{item.count}}</span>
+                                        <span class="text-end quantity font-pop font-normal text-[16px] leading-6">{{item.quantity}}</span>
                                         <div class="flex flex-col gap-y-3">
                                             <i @click = increment(index) class="fas fa-chevron-up fa-sm"></i>
                                             <i @click = decrement(index) class="fas fa-chevron-down fa-sm"></i>
                                         </div>
                                 </div>
                             </td>
-                            <td class="pl-10 w-1/6 font-pop font-normal text-[16px] leading-6 whitespace-nowrap">{{item.price * item.count}}</td>
+                            <td class="pl-10 w-1/6 font-pop font-normal text-[16px] leading-6 whitespace-nowrap">{{item.inventory.after_discount * item.quantity}}</td>
                             <td class="w-1/6 pl-10 py-6 font-pop font-normal text-[16px] leading-6 text-red-700 whitespace-nowrap"><a href="#"><i class="fas fa-trash-alt"></i></a></td>
                         </tr>
                     </tbody>
@@ -39,8 +40,9 @@
             </div>
             <div class="cart-butns flex flex-row justify-between pt-5">
                 <button class="px-4 md:px-12 py-2 md:py-4 font-pop font-medium text-[16px] leading-6 border border-[rgba(0,0,0,0.5)] rounded hover:bg-[#DB4444] hover:text-white hover:border-white duration-300">Return To Shop</button>
-                <button class="px-4 md:px-12 py-2 md:py-4 font-pop font-medium text-[16px] leading-6 border border-[rgba(0,0,0,0.5)] rounded hover:bg-[#DB4444] hover:text-white hover:border-white duration-300">Update Cart</button>
+                <button type="submit" class="px-4 md:px-12 py-2 md:py-4 font-pop font-medium text-[16px] leading-6 border border-[rgba(0,0,0,0.5)] rounded hover:bg-[#DB4444] hover:text-white hover:border-white duration-300">Update Cart</button>
             </div>
+            </form>
         </div>
         <div class="container py-10 md:pt-[113px]">
             <div class="w-full md:w-1/3 ms-auto">
@@ -52,12 +54,12 @@
                             <h4 class="font-pop font-normal text-[16px] leading-6">&#2547; {{ subtotal }}</h4>
                         </div>
                         <div class="amount flex flex-row justify-between py-4 border-b-1 border-black">
-                            <h4 class="font-pop font-normal text-[16px] leading-6">Shipping:</h4>
-                            <h4 class="font-pop font-normal text-[16px] leading-6">Free</h4>
+                            <h4 class="font-pop font-normal text-[16px] leading-6">Discount:</h4>
+                            <h4 class="font-pop font-normal text-[16px] leading-6">&#2547; {{ subtotal-total }}</h4>
                         </div>
                         <div class="amount flex flex-row justify-between py-4">
                             <h4 class="font-pop font-normal text-[16px] leading-6">Total:</h4>
-                            <h4 class="font-pop font-normal text-[16px] leading-6">$1750</h4>
+                            <h4 class="font-pop font-normal text-[16px] leading-6">&#2547; {{ total }}</h4>
                         </div>
                     </div>
                     <router-link to="/checkout" class="text-center px-4 md:px-12 py-2 md:py-4 font-pop font-medium text-[16px] leading-6 border rounded bg-[#DB4444] text-white border-white hover:bg-white hover:text-[#DB4444] hover:border-[#DB4444] duration-300">Proceed to checkout</router-link>
@@ -69,6 +71,8 @@
 <script setup>
     import product from '@/assets/images/product1.png'
     import useAuth from '@/composables/useAuth'
+    import axios from 'axios'
+    import Swal from 'sweetalert2'
     import { ref, computed, watch } from 'vue'
     import { useStore } from 'vuex'
     const {user, isAuthenticated, logout} = useAuth()
@@ -81,37 +85,46 @@
     })
     const carts = computed(()=> store.getters.carts )
 
-    const cart = ref([
-        {
-            id:1,
-            name: 'LCD Monitor',
-            image: 'https://placehold.co/70',
-            price: 650,
-            count: 1,
-        },
-        {
-            id:2,
-            name: 'H1 Gamepad',
-            image: 'https://placehold.co/70',
-            price: 550,
-            count: 2,
-        },
-    ])
+    
 
     const increment = (index) =>{
-        cart.value[index].count++
+        carts.value[index].quantity++
     }
     const decrement = (index) =>{
-        if(cart.value[index].count > 1){
-            cart.value[index].count--
+        if(carts.value[index].quantity > 1){
+            carts.value[index].quantity--
         }
     }
 
     const subtotal = computed(() =>{
-        return cart.value.reduce((acc, cart)=>acc + cart.price * cart.count, 0)
+        return carts.value.reduce((acc, cart)=>acc + cart.inventory.price * cart.quantity, 0)
+    })
+    const total = computed(() =>{
+        return carts.value.reduce((acc, cart)=>acc + cart.inventory.after_discount * cart.quantity, 0)
     })
 
-
+    const update = () =>{
+        const updatedCarts = carts.value.map(item=>({
+            id:item.id,
+            quantity:item.quantity,
+        }))
+        axios.post('http://127.0.0.1:8000/api/cart/update', {
+            carts: updatedCarts
+        })
+        .then(response=>{
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: response.data.success,
+                showConfirmButton: false,
+                timer: 1500
+            });
+        })
+        .catch(error=>{
+            console.log(error.response.data.errors);
+            
+        })
+    }
 
 
 
