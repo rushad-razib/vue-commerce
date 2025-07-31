@@ -68,13 +68,12 @@
 <script setup>
     import Logo from '@/assets/images/logo.png'
     import Profile from '@/pages/Profile.vue';
-    import { computed, ref, watch } from 'vue';
+    import { computed, onMounted, ref, watch } from 'vue';
     import useAuth from '@/composables/useAuth';
     import { useStore } from 'vuex';
     const {user, isAuthenticated, logout} = useAuth();
 
     const store = useStore();
-    
     watch(user, (newUser)=>{
         store.dispatch('fetchCartDetails', newUser.id)
     })
