@@ -12,6 +12,7 @@ export default createStore({
         product_details: [],
         tags: [],
         carts: [],
+        myorders: [],
     },
     mutations:{
         updateToken(state, token){
@@ -48,6 +49,9 @@ export default createStore({
         },
         set_carts(state, cart_details){
             state.carts = cart_details
+        },
+        set_myorders(state, myorders){
+            state.myorders = myorders
         }
     },
     actions:{
@@ -117,6 +121,16 @@ export default createStore({
             .catch(error=>{
                 console.log('error fetching cart');
             })
+        },
+        fetchMyOrders({commit}, id){
+            return axios.get(`http://127.0.0.1:8000/api/myorders/${id}`)
+            .then(response=>{
+                commit('set_myorders', response.data.orders)
+            })
+            .catch(error=>{
+                console.log('error fetching customer orders');
+                
+            })
         }
     },
     getters:{
@@ -128,5 +142,6 @@ export default createStore({
         product_details: state => state.product_details,
         tags: state => state.tags,
         carts: state => state.carts,
+        myorders: state => state.myorders,
     }
 })

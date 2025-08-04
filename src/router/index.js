@@ -5,6 +5,7 @@ import Wishlist from '@/pages/Wishlist.vue'
 import Cart from '@/pages/Cart.vue'
 import Checkout from '@/pages/Checkout.vue'
 import Profile from '@/pages/Profile.vue'
+import MyOrders from '@/pages/MyOrders.vue'
 import Error from '@/pages/Error.vue'
 import ProductLanding from '@/pages/ProductLanding.vue'
 import Login from '@/pages/Login.vue'
@@ -19,6 +20,7 @@ const routes = [
   { path: '/cart', component: Cart },
   { path: '/checkout', component: Checkout },
   { path: '/profile', component: Profile, meta: { requiresAuth: true } },
+  { path: '/myorder', component: MyOrders, meta: { requiresAuth: true } },
   { path: '/error', component: Error },
   { path: '/product/:id', component: ProductLanding },
   { path: '/login', component: Login },

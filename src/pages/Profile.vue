@@ -7,14 +7,14 @@
             <div class="w-full md:w-1/4">
                 <nav class="profile-nav flex flex-row md:flex-col gap-y-3 gap-x-0 md:gap-x-0">
                     <router-link to="" class="font-pop font-medium text-[16px] leading-6 px-2 border-r-1 last:border-r-0 md:px-0 md:border-none">My Account</router-link>
-                    <router-link to="" class="font-pop font-medium text-[16px] leading-6 px-2 border-r-1 last:border-r-0 md:px-0 md:border-none">My Orders</router-link>
+                    <router-link to="/myorder" class="font-pop font-medium text-[16px] leading-6 px-2 border-r-1 last:border-r-0 md:px-0 md:border-none">My Orders</router-link>
                     <router-link to="" class="font-pop font-medium text-[16px] leading-6 px-2 border-r-1 last:border-r-0 md:px-0 md:border-none">My Wishlist</router-link>
                     <!-- <a class="hover:cursor-pointer font-pop font-medium text-[16px] leading-6 px-2 border-r-1 last:border-r-0 md:px-0 md:border-none" v-if="user" @click="logout">Logout</a> -->
                     <a class="hover:cursor-pointer font-pop font-medium text-[16px] leading-6 px-2 border-r-1 last:border-r-0 md:px-0 md:border-none" v-if="user" @click="logout">Logout</a>
                 </nav>
             </div>
             <div class="w-full md:w-3/4">
-                <div class="flex flex-col py-5 px-0 md:py-10 md:px-20 gap-y-4">
+                <div class="flex flex-col gap-y-4">
                     <h3 class="font-pop font-medium text-[20px] leading-7 text-[#DB4444]">Edit Your Profile</h3>
                     <form @submit.prevent="update">
                         <div class="flex flex-col gap-y-2 md:gap-y-6">

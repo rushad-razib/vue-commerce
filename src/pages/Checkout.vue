@@ -211,16 +211,13 @@
             phone:phone.value,
         })
         .then(response=>{
-            Swal.fire({
-                position: "bottom-end",
-                icon: "success",
-                title: response.data.success,
-                showConfirmButton: false,
-                timer: 1500
-            });
-            
-            loading.value = false
-            router.push('/checkout/success')
+            if(response.data.success){
+                loading.value = false
+                router.push('/checkout/success')
+            }
+            else if(response.data.redirect){
+                window.location.href = response.data.redirect
+            }
         })
         .catch(error=>{
             if(error.response?.data?.errors){
