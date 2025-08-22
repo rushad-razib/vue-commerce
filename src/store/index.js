@@ -7,6 +7,7 @@ export default createStore({
         isAuthenticated: !!localStorage.getItem('token'),
         user: null,
         categories: null,
+        colors: null,
         newArrivals: null,
         allProducts: [],
         product_details: [],
@@ -34,6 +35,9 @@ export default createStore({
         },
         setCategories(state, categories){
             state.categories = categories
+        },
+        setColors(state, colors){
+            state.colors = colors
         },
         setNewArrivals(state, newArrivals){
             state.newArrivals = newArrivals
@@ -83,6 +87,15 @@ export default createStore({
             })
             .catch(error=>{
                 console.log('error fetching new categories');
+            })
+        },
+        fetchColors({commit}){
+            return axios.get('http://127.0.0.1:8000/api/get/colors')
+            .then(response=>{
+                commit('setColors', response.data.colors)
+            })
+            .catch(error=>{
+                console.log('error fetching new colors');
             })
         },
         fetchNewArrivals({commit}){
@@ -137,6 +150,7 @@ export default createStore({
         authStatus: (state)=> state.isAuthenticated ,
         user: (state)=> state.user ,
         categories: state => state.categories,
+        colors: state => state.colors,
         newArrivals: state => state.newArrivals,
         allProducts: state => state.allProducts,
         product_details: state => state.product_details,
